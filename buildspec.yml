@@ -1,0 +1,30 @@
+version: 0.2
+
+phases:
+  install:
+    runtime-versions:
+      nodejs: latest
+    commands:
+      - echo "Installing dependencies..."
+      - yum install -y httpd  # Install Apache if needed
+      - chmod +x scripts/install_dependencies scripts/start_server scripts/stop_server
+  pre_build:
+    commands:
+      - echo "Pre-build phase: Validating setup..."
+      - node -v  # Check Node.js version
+  build:
+    commands:
+      - echo "Build phase: Running application build steps..."
+      # Add any build steps if required, like npm install, compiling assets, etc.
+  post_build:
+    commands:
+      - echo "Post-build phase: Preparing deployment..."
+      - zip -r deploy.zip *  # Create a deployment package
+      - echo "Build completed successfully"
+
+artifacts:
+  files:
+    - deploy.zip
+    - appspec.yml
+    - scripts/**  # Include all deployment scripts
+  discard-paths: no
